@@ -1,0 +1,21 @@
+{
+  "post_tool_use": {
+    "matcher": "^apply_patch$",
+    "command": "node bin/octodocs.mjs hook --source file_change"
+  },
+  "stop": {
+    "command": "node bin/octodocs.mjs status"
+  },
+  "background": "enqueue-only",
+  "PostToolUse": [
+    {
+      "matcher": "^apply_patch$",
+      "command": "node bin/octodocs.mjs hook --source file_change --path"
+    }
+  ],
+  "Stop": [
+    {
+      "command": "node bin/octodocs.mjs status"
+    }
+  ]
+}

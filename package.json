@@ -1,0 +1,35 @@
+{
+  "name": "octodocs-assistant",
+  "version": "0.1.0",
+  "description": "Evidence-ledger based project documentation assistant for agent-first workflows.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "author": "Octo-o-o-o",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Octo-o-o-o/OctoDocsAssistant.git"
+  },
+  "bin": {
+    "octodocs": "./bin/octodocs.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "eval": "node evals/run.mjs",
+    "check-skill": "node scripts/check-skill.mjs",
+    "install-skill": "node scripts/install-skill.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "cheerio": "^1.0.0",
+    "chokidar": "^4.0.3",
+    "gray-matter": "^4.0.3",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,18 @@
+{
+  "documents": [
+    "README.md",
+    "docs/auth-需求.md",
+    "docs/payments-方案.md",
+    "docs/stale-old.md",
+    "prototype/demo.html",
+    "docs/deleted-design.md"
+  ],
+  "stale_docs": [
+    "docs/stale-old.md",
+    "docs/deleted-design.md"
+  ],
+  "designed_not_implemented_docs": [
+    "docs/payments-方案.md"
+  ],
+  "expected_false_verified": 0
+}
