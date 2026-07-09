@@ -19,6 +19,7 @@ test('scanner finds markdown/html, ignores generated docs, and dedupes reruns', 
     await mkdir(join(root, 'docs'), { recursive: true });
     await mkdir(join(root, 'app', 'node_modules', 'pkg'), { recursive: true });
     await mkdir(join(root, 'app', '.next', 'server'), { recursive: true });
+    await mkdir(join(root, '.pytest_cache'), { recursive: true });
     await mkdir(join(root, '.design-sync'), { recursive: true });
     await mkdir(join(root, '.staging', 'app'), { recursive: true });
     await mkdir(join(root, '.workflow', 'intake'), { recursive: true });
@@ -32,6 +33,7 @@ test('scanner finds markdown/html, ignores generated docs, and dedupes reruns', 
     await writeFile(join(root, 'docs', 'octodocs', 'PROJECT_CURRENT.md'), '# Generated\n', 'utf8');
     await writeFile(join(root, 'app', 'node_modules', 'pkg', 'README.md'), '# Dependency\n', 'utf8');
     await writeFile(join(root, 'app', '.next', 'server', 'BUILD.md'), '# Build Output\n', 'utf8');
+    await writeFile(join(root, '.pytest_cache', 'README.md'), '# pytest cache directory\n', 'utf8');
     await writeFile(join(root, '.design-sync', 'NOTES.md'), '# Design Sync Notes\n', 'utf8');
     await writeFile(join(root, '.staging', 'app', 'README.md'), '# Staged App\n', 'utf8');
     await writeFile(join(root, '.workflow', 'intake', 'plan.md'), '# Workflow Plan\n', 'utf8');

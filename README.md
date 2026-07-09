@@ -19,6 +19,7 @@ octodocs emit-tasks --out .octodocs/settlement.task.json
 octodocs apply --answers .octodocs/answers.json
 octodocs review
 octodocs rebuild --from-ledger
+octodocs package-handoff --out octodocs-handoff --zip --force
 octodocs watch
 ```
 
@@ -29,6 +30,7 @@ octodocs watch
 - `verification: verified` requires both `implements` and `tests` evidence and policy/review approval.
 - `not_found` is ambiguous evidence, not `not_implemented`.
 - Generated `docs/octodocs/**` is ignored during scan and watch to avoid self-pollution.
+- Generated/cache artifacts such as `.pytest_cache/**` are ignored by default and must not become recommended reading.
 - Generated Markdown starts with the human-facing content; machine metadata is kept in hidden managed comments and technical appendices.
 - Generated/process artifacts such as `.design-sync/**`, browser walkthrough reports, and GitHub issue drafts are ignored by default.
 - Inline-code symbol evidence is capped per source document and aggregated by symbol/relation; use explicit ledger anchors for exhaustive verification.
@@ -54,6 +56,17 @@ octodocs watch
 - `docs/octodocs/html/changes.html`
 - `docs/octodocs/html/angles.html`
 - `docs/octodocs/html/*.html`
+
+## Handoff Packages
+
+Use `octodocs package-handoff` after rendering when a recipient needs a folder or zip that can be read without the original repository path:
+
+```sh
+octodocs render
+octodocs package-handoff --out octodocs-handoff --zip --force
+```
+
+The package command copies `docs/octodocs`, rewrites source links into package-local `_source_docs/` snapshots, writes `HANDOFF_GUIDE.md`, refreshes managed hashes after relocation, and records link verification in `_HANDOFF_AUDIT.json`. The package is suitable for reading, handoff, and planning; code changes, deployment, tests, and secrets still require the real source repository.
 
 Run tests and the deterministic benchmark with:
 

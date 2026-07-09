@@ -12,6 +12,7 @@ import { evidenceFromSignals } from '../signals/relations.mjs';
 import { classifyDocument, classifyDocuments } from '../classify/doc.mjs';
 import { buildClaimsFromDocuments } from '../ledger/claims.mjs';
 import { readTextIfExists } from '../utils/fs.mjs';
+import { redactSecrets } from '../security/redaction.mjs';
 
 function docStatusFromParsed(parsed) {
   const fmStatus = parsed.frontmatter?.ledger?.status || parsed.frontmatter?.status;
@@ -29,9 +30,13 @@ function docStatusFromParsed(parsed) {
 
 function summaryFor(parsed) {
   const classification = classifyDocument(parsed);
-  if (parsed.kind === 'html') return `${parsed.html_kind} HTML: ${parsed.excerpt || parsed.title}`.slice(0, 260);
+  // render_summary is persisted in the committable ledger and rendered into
+  // product docs / handoff packages, so document excerpts must be redacted here
+  // — a doc whose opening lines contain an API key would otherwise leak it
+  // verbatim into every downstream artifact.
+  if (parsed.kind === 'html') return redactSecrets(`${parsed.html_kind} HTML: ${parsed.excerpt || parsed.title}`.slice(0, 260));
   const warning = parsed.frontmatter_error ? ' [frontmatter parse warning]' : '';
-  return `[${classification.type}] ${(parsed.excerpt || parsed.title || parsed.path).slice(0, 220)}${warning}`;
+  return redactSecrets(`[${classification.type}] ${(parsed.excerpt || parsed.title || parsed.path).slice(0, 220)}${warning}`);
 }
 
 function appendAll(target, items) {

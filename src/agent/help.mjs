@@ -28,6 +28,7 @@ export function helpAgentManifest() {
         reconcile: ['scan --dry-run', 'update --changed --dry-run', 'update --changed --summary', 'update --changed', 'rebuild --from-ledger'],
         host_agent: ['emit-tasks --out .octodocs/settlement.task.json', 'apply --answers .octodocs/answers.json'],
         review: ['review', 'review explain <id>', 'review confirm <id>', 'review reject <id> --reason <category>'],
+        handoff: ['package-handoff --out octodocs-handoff --zip --force'],
         triggers: ['watch', 'watch --once', 'hook --source file_change --path <path>']
       },
       outputs: {

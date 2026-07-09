@@ -11,6 +11,7 @@ import { installCommand } from '../commands/install.mjs';
 import { reviewCommand } from '../commands/review.mjs';
 import { updateCommand } from '../commands/update.mjs';
 import { watchCommand } from '../commands/watch.mjs';
+import { packageHandoffCommand } from '../commands/package-handoff.mjs';
 
 const PLACEHOLDER_COMMANDS = new Set([]);
 
@@ -72,8 +73,15 @@ export async function runCli(argv) {
     printPayload(await updateCommand({ root: process.cwd(), args }));
     return;
   }
+  if (command === 'package-handoff') {
+    printPayload(await packageHandoffCommand({ root: process.cwd(), args }));
+    return;
+  }
   if (command === 'watch') {
-    await watchCommand({ root: process.cwd(), args });
+    // Continuous mode prints its own stream and returns undefined on shutdown;
+    // --once returns an ok(...) payload that must reach stdout like every other command.
+    const payload = await watchCommand({ root: process.cwd(), args });
+    if (payload) printPayload(payload);
     return;
   }
   if (command === 'migrate') {

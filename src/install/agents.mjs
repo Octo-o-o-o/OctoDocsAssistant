@@ -50,7 +50,7 @@ export async function installAgentHooks(root) {
   const codex = await readJson(codexPath);
   const nextCodex = {
     ...codex,
-    PostToolUse: [{ matcher: '^apply_patch$', command: 'node bin/octodocs.mjs hook --source file_change --path' }],
+    PostToolUse: [{ matcher: '^apply_patch$', command: 'node bin/octodocs.mjs hook --source file_change --stdin' }],
     Stop: [{ command: 'node bin/octodocs.mjs status' }],
     background: 'enqueue-only'
   };

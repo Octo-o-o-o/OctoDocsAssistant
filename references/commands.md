@@ -15,10 +15,13 @@ All command outputs use `{ ok, data, next_actions }`. Errors use `{ ok:false, er
 - `octodocs scan --progress`
 - `octodocs update --changed`
 - `octodocs update --changed --dry-run`
+- `octodocs update --changed --summary` (compact output for large reconciliations)
 - `octodocs update --changed --progress`
 - `octodocs rebuild --from-ledger`
 - `octodocs render --language zh|en`
 - `octodocs rebuild --from-ledger --language zh|en`
+- `octodocs package-handoff --out octodocs-handoff`
+- `octodocs package-handoff --out octodocs-handoff --zip --force`
 
 `--progress` writes scan phase and file progress to stderr while keeping stdout as JSON.
 `--language zh|en` controls product-facing and engineering-view labels; code names, file names, API names, and evidence ids are not translated.
@@ -36,6 +39,19 @@ Engineering views are still generated as `PROJECT_CURRENT.md`, `PROJECT_TIMELINE
 `PROJECT_TIMELINE.md` is the human-readable history trace: it groups recent commits by time, shows whether docs were included, and flags source/config/migration commits that did not update Markdown/HTML documentation in the same commit.
 `DOCUMENTATION_GAPS.md` is generated as the standardization gap report for missing or partial source documentation.
 Generated Markdown should start with the reader-facing title; machine metadata stays in hidden managed comments and technical appendices.
+
+## Handoff Packaging
+
+`octodocs package-handoff` builds a standalone handoff directory from generated `docs/octodocs` views. It copies the generated docs, rewrites local source-document links into package-local `_source_docs/` snapshots, sanitizes missing nested snapshot links into inline path notes, refreshes managed hashes after relocation, writes `HANDOFF_GUIDE.md`, and records verification in `_HANDOFF_AUDIT.json`.
+
+Use this when generated docs need to be sent to another person without assuming they have the original repository path. The package is for reading and handoff; implementation verification still belongs in the real repository.
+
+Options:
+
+- `--out <dir>`: output directory, default `octodocs-handoff`.
+- `--zip [path]`: also create a zip; if no path is supplied, uses `<out>.zip`.
+- `--force`: remove an existing output directory before rebuilding it.
+- `--project-name <name>`: override the display name in the generated handoff guide.
 
 Generated HTML docs:
 

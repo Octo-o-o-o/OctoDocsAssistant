@@ -48,9 +48,10 @@ export function startWatcher(root, { onEvent = () => {}, onReady = () => {}, ign
     awaitWriteFinish: { stabilityThreshold: 150, pollInterval: 50 }
   });
   for (const eventName of ['add', 'change', 'unlink']) {
-    watcher.on(eventName, async (path) => {
-      const result = await enqueueForFsEvent(root, eventName, join(root, path));
-      if (result) onEvent(result);
+    watcher.on(eventName, (path) => {
+      enqueueForFsEvent(root, eventName, join(root, path))
+        .then((result) => { if (result) onEvent(result); })
+        .catch((error) => process.stderr.write(`[octodocs watch] enqueue failed for ${path}: ${error.message}\n`));
     });
   }
   watcher.on('ready', onReady);

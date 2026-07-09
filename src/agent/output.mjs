@@ -30,6 +30,7 @@ export function commandHelp(command = null) {
     { name: 'render', summary: 'Render docs/octodocs views from ledger data.' },
     { name: 'status', summary: 'Show ledger, journal, review, and generated-view status.' },
     { name: 'update', summary: 'Scan changed files or the full repo, settle deterministic items, and render views; use --dry-run for no-write preview.' },
+    { name: 'package-handoff', summary: 'Build a standalone handoff package from docs/octodocs, rewrite source links, copy referenced snapshots, and verify package-local links.' },
     { name: 'rebuild', summary: 'Rebuild cache and generated views from .octodocs/ledger.accepted.jsonl.' },
     { name: 'migrate', summary: 'Migrate the ledger to the current schema_version (no-op at v1).' },
     { name: 'emit-tasks', summary: 'Emit host-agent task packages for pending semantic work.' },

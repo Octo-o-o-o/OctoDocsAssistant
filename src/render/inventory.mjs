@@ -30,6 +30,7 @@ function lowPriorityPath(path) {
     /^\.design-sync\//,
     /^\.omo\//,
     /^\.sisyphus\//,
+    /^\.pytest_cache\//,
     /^tests?\//,
     /(^|\/)__fixtures__\//,
     /(^|\/)fixtures\//,
@@ -37,6 +38,7 @@ function lowPriorityPath(path) {
     /(^|\/)browser-walkthrough-reports\//,
     /(^|\/)github-issue-drafts[^/]*\//,
     /(^|\/)node_modules\//,
+    /(^|\/)\.pytest_cache\//,
     /(^|\/)vendor\//
   ].some((pattern) => pattern.test(String(path || '')));
 }

@@ -120,14 +120,39 @@ test('update --summary returns compact agent-facing output', async () => {
 
 test('task package redacts secrets in untrusted content', async () => {
   const root = await mkdtemp(join(tmpdir(), 'octodocs-redact-'));
+  // Fake tokens are assembled at runtime so no complete token-shaped literal
+  // exists in this file — GitHub push protection scans committed content and
+  // blocks pushes on token-shaped strings even in test fixtures.
+  const fakeOpenAiKey = ['sk', '1234567890abcdefghijklmnop'].join('-');
+  const fakeGithubToken = ['ghp', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456'].join('_');
+  const fakeAwsKeyId = ['AKIA', 'IOSFODNN7EXAMPLE'].join('');
+  const fakeSlackToken = ['xoxb', '1234567890', 'ABCDEFGHIJKLMNOP'].join('-');
+  const fakeGoogleKey = ['AIza', 'SyA1234567890abcdefghijklmnopqrstuv'].join('');
   try {
     await mkdir(join(root, 'docs'), { recursive: true });
-    await writeFile(join(root, 'docs', 'secret.md'), '# Secret\n\napi_key = "sk-1234567890abcdefghijklmnop"\n', 'utf8');
+    await writeFile(
+      join(root, 'docs', 'secret.md'),
+      [
+        '# Secret',
+        '',
+        `api_key = "${fakeOpenAiKey}"`,
+        `Deploy uses ${fakeGithubToken} for CI.`,
+        `AWS key ${fakeAwsKeyId} is rotated monthly.`,
+        `Slack bot ${fakeSlackToken} posts alerts.`,
+        `Maps key ${fakeGoogleKey}.`,
+        ''
+      ].join('\n'),
+      'utf8'
+    );
     await initProject(root);
     await scanRepository(root);
     const { taskPackage } = await writeTaskPackage(root);
     const serialized = JSON.stringify(taskPackage);
-    assert.doesNotMatch(serialized, /sk-123456/);
+    assert.ok(!serialized.includes(fakeOpenAiKey.slice(0, 9)));
+    assert.ok(!serialized.includes(fakeGithubToken));
+    assert.ok(!serialized.includes(fakeAwsKeyId));
+    assert.ok(!serialized.includes(fakeSlackToken));
+    assert.ok(!serialized.includes(fakeGoogleKey));
     assert.match(serialized, /REDACTED_SECRET/);
   } finally {
     await rm(root, { recursive: true, force: true });

@@ -14,7 +14,9 @@ const DEFAULT_IGNORES = [
   '**/.next-e2e/**',
   '**/.test-dist/**',
   '**/.turbo/**',
+  '.pytest_cache/**',
   '**/.cache/**',
+  '**/.pytest_cache/**',
   '**/.vite/**',
   '.design-sync/**',
   '**/.design-sync/**',
@@ -95,6 +97,17 @@ export function matchesGlobLike(path, pattern) {
   if (pat.endsWith('/**') && !pat.slice(0, -3).includes('*')) {
     const dir = pat.slice(0, -3);
     return normalized === dir || normalized.startsWith(`${dir}/`);
+  }
+  if (pat.startsWith('**/') && pat.endsWith('/**') && !pat.slice(3, -3).includes('*')) {
+    // Match the directory itself at any depth so walkers can prune the
+    // whole subtree instead of recursing into it file by file.
+    const dir = pat.slice(3, -3);
+    return (
+      normalized === dir ||
+      normalized.startsWith(`${dir}/`) ||
+      normalized.endsWith(`/${dir}`) ||
+      normalized.includes(`/${dir}/`)
+    );
   }
   if (pat.startsWith('**/*.')) return normalized.endsWith(pat.slice(4));
   if (pat.includes('*')) {
